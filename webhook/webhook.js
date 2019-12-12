@@ -28,17 +28,27 @@ app.post('/', express.json(), (req, res) => {
   const agent = new WebhookClient({ request: req, response: res })
 
   function welcome () {
-    agent.add('Webhook works!')
+    agent.add('jthick Webhook works!')
+    console.log("welcome intent");
   }
 
+  
+
   async function login () {
-    // You need to set this from `username` entity that you declare in DialogFlow
-    username = null
-    // You need to set this from password entity that you declare in DialogFlow
-    password = null
-    await getToken()
-    
-    agent.add(token)
+  
+    username = agent.parameters.username;
+    password = agent.parameters.password;
+
+    token = await getToken();
+
+    if (token != null) {
+      agent.add(token)
+      console.log(token);
+      agent.add('successful login for ' + username + ", " + password);
+      
+    } else {
+      agent.add('unsuccessful login for ' + username + ", " + password);
+    }
   }
 
 
